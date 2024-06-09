@@ -1,7 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
+// socket.io 라이브러리 사용을 위해 http 모듈 사용 , Node.js 기본 라이브러리
 import { createServer } from 'http';
 import initSocket from './init/socket.js';
+import { loadGameAssests } from './init/assets.js';
 
 dotenv.config();
 
@@ -26,4 +28,13 @@ app.get('/', (req, res) => {
 
 server.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
+
+  // 이 곳에서 파일 읽음
+  try {
+    const assets = await loadGameAssests();
+    console.log(assets);
+    console.log(`Assets loaded successfully`);
+  } catch (err) {
+    console.log('Failed to load game assets: ', err);
+  }
 });
