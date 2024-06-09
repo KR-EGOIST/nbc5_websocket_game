@@ -4,7 +4,7 @@
 import { addUser } from '../models/user.model.js';
 // uuid 를 생성하는 모듈 uuid , npm i uuid
 import { v4 as uuidv4 } from 'uuid';
-import { handleDisconnect, handleConnection } from './helper.js';
+import { handleDisconnect, handleConnection, handlerEvent } from './helper.js';
 
 /*
 io.on 을 하면 우리 서버에 접속하는 모든 유저를 대상으로 일어나는 이벤트 입니다.
@@ -23,6 +23,11 @@ const registerHandler = (io) => {
     addUser({ uuid: userUUID, socketId: socket.id });
 
     handleConnection(socket, userUUID);
+
+    // 이벤트 처리하는 함수
+    // 메세지를 data 란 이름으로 handlerEvent 함수로 전달합니다.
+    // event 라는 이름으로 발생하는 모든 이벤트는 handlerEvent 함수로 처리해라.
+    socket.on('evnet', (data) => handlerEvent(io, socket, data));
 
     // 접속 해제시 이벤트, 유저가 접속을 끊었을 경우
     socket.on('disconnect', (socket) => {
