@@ -1,18 +1,16 @@
 // helper 란?
 // 어떤 특정한 기능을 하는 건 아니지만 꼭 필요한 우리에게 도움을 주는 함수
 
-import { setStage } from '../models/stage.model.js';
-import { addUser, removeUser, getUser } from '../models/user.model.js';
-import { getStage } from '../models/stage.model.js';
-import { getGameAssets } from '../init/assets.js';
+import { createStage } from '../models/stage.model.js';
+import { removeUser, getUsers } from '../models/user.model.js';
 import { CLIENT_VERSION } from '../constants.js';
 import handlerMappings from './handlerMapping.js';
 
 export const handleDisconnect = (socket, uuid) => {
-  removeUser(socket.id);
+  removeUser(socket.id); // 사용자 삭제
   console.log(`User disconnected: ${socket.id}`);
   // 현재 접속중인 유저의 수 출력
-  console.log('Current users: ', getUser());
+  console.log('Current users: ', getUsers());
 };
 
 // 기획 리마인드
@@ -20,14 +18,16 @@ export const handleDisconnect = (socket, uuid) => {
 // 1스테이지, 0점 -> 1점씩
 // 2스테이지, 1000점 -> 2점씩
 
-export const handleConnection = (socket, uuid) => {
-  console.log(`New user connected: ${uuid} with socket ID ${socket.id}`);
+export const handleConnection = (socket, userUUID) => {
+  console.log(`New user connected: ${userUUID} with socket ID ${socket.id}`);
   // 현재 접속중인 유저의 수 출력
-  console.log('Current users: ', getUser());
+  console.log('Current users: ', getUsers());
+
+  createStage(userUUID);
 
   // socket.emit 은 본인에게 보내는 거예요.
   // 유저가 접속했을 때, 유저의 uuid 정보를 보내준다 (response).
-  socket.emit('connection', { uuid });
+  socket.emit('connection', { uuid: userUUID });
 };
 
 // 핸들러를 맵핑하는 객체를 생성했으니 사용을 할 곳이 있어야합니다.

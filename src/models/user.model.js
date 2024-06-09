@@ -15,6 +15,6 @@ export const removeUser = (socketId) => {
 };
 
 // 유저 조회
-export const getUser = () => {
+export const getUsers = () => {
   return users;
 };

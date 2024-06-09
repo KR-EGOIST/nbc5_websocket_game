@@ -19,6 +19,10 @@ app.use(express.json());
 // payload 를 자동으로 파싱 해준다는 의미이다.
 app.use(express.urlencoded({ extended: false }));
 
+// express 의 static 메서드를 사용해서 정적파일 (html, css, js)을 서빙하는 것을 설정합니다.
+// 경로는 ‘public’ 폴더로 지정합니다.
+app.use(express.static('public'));
+
 // 서버를 매개변수로 함수 호출
 initSocket(server);
 

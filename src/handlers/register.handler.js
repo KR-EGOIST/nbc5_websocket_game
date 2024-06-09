@@ -27,10 +27,10 @@ const registerHandler = (io) => {
     // 이벤트 처리하는 함수
     // 메세지를 data 란 이름으로 handlerEvent 함수로 전달합니다.
     // event 라는 이름으로 발생하는 모든 이벤트는 handlerEvent 함수로 처리해라.
-    socket.on('evnet', (data) => handlerEvent(io, socket, data));
+    socket.on('event', (data) => handlerEvent(io, socket, data));
 
     // 접속 해제시 이벤트, 유저가 접속을 끊었을 경우
-    socket.on('disconnect', (socket) => {
+    socket.on('disconnect', () => {
       // 유저를 삭제한다.
       handleDisconnect(socket, userUUID);
     });

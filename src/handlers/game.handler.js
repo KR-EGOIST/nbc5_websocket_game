@@ -1,13 +1,15 @@
 import { getGameAssets } from '../init/assets.js';
-import { getStage, setStage } from '../models/stage.model.js';
+import { clearStage, getStage, setStage } from '../models/stage.model.js';
 
 export const gameStart = (uuid, payload) => {
   const { stages } = getGameAssets();
+
+  clearStage(uuid);
   // stages 배열에서 0번째 = 첫번째 스테이지
   // 클라이언트에서 현재 시작하는 시간을 받아서 서버에 저장을 할 겁니다.
   setStage(uuid, stages.data[0].id, payload.timestamp);
   // 스테이지에 잘 들어갔다 확인
-  console.log('Stages: ', getStage(uuid));
+  console.log('Stage: ', getStage(uuid));
 
   return { status: 'success' };
 };

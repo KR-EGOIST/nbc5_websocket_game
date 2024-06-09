@@ -22,17 +22,17 @@ export const moveStageHandler = (userId, payload) => {
 
   // payload 의 currentStage 와 비교
   // 클라이언트와 서버와 비교
-  if (currentStage.ㅑㅇ !== payload.currentStageId) {
-    return { status: 'fail', message: 'Current Stage mismatch' };
+  if (currentStage.id !== payload.currentStage) {
+    return { status: 'fail', message: 'Current stage mismatch' };
   }
 
   // 점수 검증
-  const serverTime = Data.now(); // 현재 타임스탬프
+  const serverTime = Date.now(); // 현재 타임스탬프
   // 경과 시간 elapsedTime
   // 타임스탬프는 ms 로 되어있습니다.
   // 우리는 1초당 1점이다. 즉, ms 이니까 1/1000초 이므로
   // (서버시간 - 현재 유저가 있는 스테이지의 타임스탬프) / 1000
-  const elapsedTime = (serverTime - currentStages.timestamp) / 1000;
+  const elapsedTime = (serverTime - currentStage.timestamp) / 1000;
 
   // 만약 1스테이지에서 2스테이지로 넘어가는 가정
   // 5는 임의로 정한 오차범위
