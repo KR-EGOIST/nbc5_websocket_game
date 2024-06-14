@@ -1,20 +1,40 @@
-const users = []; // 유저 정보를 저장할 전역 변수
+import redisClient from '../init/redis.js';
 
-// 유저 추가, 유저가 연결을 할 경우
-export const addUser = (user) => {
-  users.push(user);
+const redisCli = redisClient.v4;
+
+const USER_KEY_PREFIX = 'user:';
+
+// 사용자 추가
+export const addUser = async (user) => {
+  await redisCli.set(`${USER_KEY_PREFIX}${user.uuid}`, JSON.stringify(user));
 };
 
-// 유저 삭제 , 유저가 연결을 해제할 경우
-// uuid 말고 현재 연결된 상태에서 데이터 통신을 하기 위해서 발급된 ID 이기 때문에 socketId 를 사용
-export const removeUser = (socketId) => {
-  const index = users.findIndex((user) => user.socketId === socketId);
-  if (index !== -1) {
-    return users.splice(index, 1)[0];
+// 사용자 제거
+export const removeUser = async (uuid) => {
+  const userKey = `${USER_KEY_PREFIX}${uuid}`;
+  const user = await redisCli.get(userKey);
+  if (user) {
+    await redisCli.del(userKey);
+    return JSON.parse(user);
   }
+  return null;
 };
 
-// 유저 조회
-export const getUsers = () => {
+// 모든 사용자 조회
+export const getUsers = async () => {
+  const keys = await redisCli.keys(`${USER_KEY_PREFIX}*`);
+  const users = [];
+  for (const key of keys) {
+    const user = await redisCli.get(key);
+    if (user) {
+      users.push(JSON.parse(user));
+    }
+  }
   return users;
+};
+
+// 사용자 조회
+export const getUserById = async (uuid) => {
+  const user = await redisCli.get(`${USER_KEY_PREFIX}${uuid}`);
+  return user ? JSON.parse(user) : null;
 };
